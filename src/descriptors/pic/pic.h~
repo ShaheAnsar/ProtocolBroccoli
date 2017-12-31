@@ -1,0 +1,8 @@
+#ifndef PIC_H
+#define PIC_H
+#include <common.h>
+#include <stddef.h>
+#include <stdint.h>
+
+extern void init_pic();
+#endif

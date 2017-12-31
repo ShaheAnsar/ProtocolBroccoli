@@ -1,0 +1,20 @@
+SRC=./src/kernel.c ./src/descriptors/gdt.c ./src/libc/string/memcpy.c ./src/libc/string/stpcpy.c ./src/libc/string/strcpy.c ./src/libc/string/strcmp.c ./src/libc/string/strcasecmp.c ./src/libc/string/strcat.c ./src/libc/string/strchr.c ./src/libc/string/index.c ./src/libc/string/strlen.c ./src/libc/string/strcoll.c ./src/vga/vga.c ./src/common/common.h ./src/descriptors/descriptors.h ./src/libc/string/string.h ./src/vga/vga.h
+OBJ=./src/kernel.o ./src/descriptors/lgdt.o ./src/start.o ./src/descriptors/gdt.o ./src/libc/string/memcpy.o ./src/libc/string/stpcpy.o ./src/libc/string/strcpy.o ./src/libc/string/strcmp.o ./src/libc/string/strcasecmp.o ./src/libc/string/strcat.o ./src/libc/string/strchr.o ./src/libc/string/index.o ./src/libc/string/strlen.o ./src/libc/string/strcoll.o ./src/vga/vga.o
+INCLUDE=-I./src/ -I./src/descriptors/ -I./src/libc/string/ -I./src/libc/string/ -I./src/libc/string/ -I./src/libc/string/ -I./src/libc/string/ -I./src/libc/string/ -I./src/libc/string/ -I./src/libc/string/ -I./src/libc/string/ -I./src/libc/string/ -I./src/vga/ -I./src/common/ -I./src/descriptors/ -I./src/libc/string/ -I./src/vga/
+TARGET=kernel.out
+CFLAGS=-Wall -pedantic --std=gnu99 -O2 -ffreestanding -fbuiltin -Wall -Wextra -nostdlib -lgcc -fno-builtin -fno-stack-protector -g3
+
+
+
+
+
+%.o: %.c
+	i686-elf-gcc $(INCLUDE) $(CFLAGS) -c $< -o $@
+%.o: %.s
+	i686-elf-as $< -o $@
+
+all: $(OBJ)
+	i686-elf-gcc $(INCLUDE) $(CFLAGS) $(OBJ) -o $(TARGET) -Tsrc/linker.ld
+
+clean:
+	-rm $(OBJ) -f

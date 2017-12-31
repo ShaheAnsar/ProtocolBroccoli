@@ -1,0 +1,35 @@
+ENTRY(start)/* The entry function, in this case start (defined in src/boot.s)*/
+
+SECTIONS{
+	/*
+	*First, a primer on how linker scripts work, although it's definitely not the one you want to go through to learn linker scripting
+	*The syntax - identifier BLOCK(BLOCKSIZE):ALIGN(ALIGNMENT){
+	*    sections
+	*}
+	*The sections are the ones that are defined in assembly files as .section .text or something like that.
+	* There's a standard on how it's defined. See that below.
+	*/
+
+	. = 1M; /*Let's make the code start at 1M, the reason is pretty simple, architectural stuff (like BIOS) is located below 1M*/
+	/* We want the multiboot to signal the start of our image, so let's put that first, also, let's mark this as read only data*/
+	.rodata BLOCK(4K):ALIGN(4K){
+		*(.multiboot)
+	}
+	/* The code is usually defined as .text in assembly, so let's put that here */
+	.text BLOCK(4K):ALIGN(4K){
+		*(.text)
+	}
+	/* Read only data is defined as .rodata, so let's put that here*/
+	.rodata BLOCK(4K):ALIGN(4K){
+		*(.rodata)
+	}
+	/*read write data is defined as .data, so let's put that here*/
+	.data BLOCK(4K):ALIGN(4K){
+		*(.data)
+	}
+	/*uninitialized read write data (including out initial stack) is defined as .bss, so let's put that here*/
+	.bss BLOCK(4K):ALIGN(4K){
+		*(COMMON)
+		*(.bss)
+	}
+}

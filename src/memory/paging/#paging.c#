@@ -1,0 +1,16 @@
+/**
+ * paging.c by Shahe Ansar
+ * An implemenation of a paging system for the x86 arch.
+ *
+ *You enable paging by setting CR0.PG and CR0.PE
+ *
+ *There are three modes of paging-
+ *32 bit paging - This is the one we'll be using, since we don't need anything else (CR0.PE = 1; CR4.PAE = 0; IA32_EFER.LME = 0)
+ *PAE paging - I might switch over to this, if it's worth it (CR0.PE = 1; CR4.PAE = 1; IA32_EFER.LME = 0;)
+ *IA32e Paging - Basically 64 bit paging. Not gonna support this until I can do 64 bit assembly well (CR0.PE = 1; CR4.PAE = 1; IA32_EFER.LME=1)
+ *
+ */
+//TODO: Complete paging.c
+
+#include "paging.h"
+

@@ -1,0 +1,91 @@
+/**
+  idt.c by Shahe Ansar
+  This file contains all the information needed to fill the IDT.
+  */
+
+
+#include "descriptors.h"
+#include <stddef.h>
+#include <stdint.h>
+#include <common.h>
+#include <string.h>
+
+extern void lidt(void* idt_ptr);
+//Interrupts
+extern void divide_error_handler();
+extern void debug_exception_handler();
+extern void nmi_handler();
+extern void breakpoint_handler();
+extern void overflow_handler();
+extern void bound_exceeded_handler();
+extern void undefined_opcode_handler();
+extern void device_NA_handler();
+extern void double_fault_handler();
+extern void coprocessor_segment_overrun_handler();
+extern void invalid_tss_handler();
+extern void segment_NA_handler();
+extern void stack_segment_fault_handler();
+extern void general_protection_fault_handler();
+extern void page_fault_handler();
+extern void math_fault_handler();
+extern void machine_check_abort_handler();
+extern void alignment_check_handler();
+extern void simd_exception_handler();
+
+typedef struct I_descriptor_T{
+  uint16_t address_low;//The lower word of the address to the entry point of the interrupt
+  uint16_t selector;//Points to a valid selector in the GDT
+  uint8_t zero;//Must always be zero
+  uint8_t type_attrib;//See above
+  uint16_t address_high;//Higher word of the address to the entry point of tyhe ISR
+}__attribute__((packed)) I_descriptor;
+
+typedef struct idt_ptr_T{
+  uint32_t base_address;//Base address of the IDT
+  uint16_t limit;//Limit of the IDT
+}__attribute__((packed)) idt_ptr;
+
+I_descriptor idt_entries[256];
+
+
+static uint8_t make_flags(uint8_t present, uint8_t dpl, uint8_t isInterrupt){
+  return (present << 7) | (dpl << 5) | (isInterrupt?(0b110):(0b111));
+}
+
+I_descriptor make_interrupt_gate(uint32_t interrupt_handler, uint16_t segment, uint8_t type_attrib){
+  return (I_descriptor){interrupt_handler & 0xFFFF, segment, 0, type_attrib, (interrupt_handler & (0xFFFF0000) >> 16)};
+}
+
+I_descriptor make_null_gate(){
+  //TODO Make a null interrupt handler
+  return make_interrupt_gate(0, 0, 0);
+}
+
+void init_idt(){
+  idt_ptr idt_pointer;
+  idt_pointer.base_address = idt_entries;
+  idt_pointer.limit = sizeof(I_descriptor)*256 - 1;
+  memset(idt_entries, 0, sizeof(idt_entries));
+  unsigned int i = 0;
+  idt_entries[i++] = make_interrupt_gate((uint32_t)divide_error_handler, 0x08, make_flags(1, 0, 1));
+  idt_entries[i++] = make_interrupt_gate((uint32_t)debug_exception_handler, 0x08, make_flags(1, 0, 1));
+  idt_entries[i++] = make_interrupt_gate((uint32_t)nmi_handler, 0x08, make_flags(1, 0, 1));
+  idt_entries[i++] = make_interrupt_gate((uint32_t)breakpoint_handler, 0x08, make_flags(1, 0, 1));
+  idt_entries[i++] = make_interrupt_gate((uint32_t)overflow_handler, 0x08, make_flags(1, 0, 1));
+  idt_entries[i++] = make_interrupt_gate((uint32_t)bound_exceeded_handler, 0x08, make_flags(1, 0, 1));
+  idt_entries[i++] = make_interrupt_gate((uint32_t)undefined_opcode_handler, 0x08, make_flags(1, 0, 1));
+  idt_entries[i++] = make_interrupt_gate((uint32_t)device_NA_handler, 0x08, make_flags(1, 0, 1));
+  idt_entries[i++] = make_interrupt_gate((uint32_t)double_fault_handler, 0x08, make_flags(1, 0, 1));
+  idt_entries[i++] = make_interrupt_gate((uint32_t)coprocessor_segment_overrun_handler, 0x08, make_flags(1, 0, 1));
+  idt_entries[i++] = make_interrupt_gate((uint32_t)invalid_tss_handler, 0x08, make_flags(1, 0, 1));
+  idt_entries[i++] = make_interrupt_gate((uint32_t)segment_NA_handler, 0x08, make_flags(1, 0, 1));
+  idt_entries[i++] = make_interrupt_gate((uint32_t)stack_segment_fault_handler, 0x08, make_flags(1, 0, 1));
+  idt_entries[i++] = make_interrupt_gate((uint32_t)general_protection_fault_handler, 0x08, make_flags(1, 0, 1));
+  idt_entries[i++] = make_interrupt_gate((uint32_t)page_fault_handler, 0x08, make_flags(1, 0, 1));
+  i++;
+  idt_entries[i++] = make_interrupt_gate((uint32_t)math_fault_handler, 0x08, make_flags(1, 0, 1));
+  idt_entries[i++] = make_interrupt_gate((uint32_t)machine_check_abort_handler, 0x08, make_flags(1, 0, 1));
+  idt_entries[i++] = make_interrupt_gate((uint32_t)alignment_check_handler, 0x08, make_flags(1, 0, 1));
+  idt_entries[i++] = make_interrupt_gate((uint32_t)simd_exception_handler, 0x08, make_flags(1, 0, 1));
+  lidt(&idt_pointer);
+}

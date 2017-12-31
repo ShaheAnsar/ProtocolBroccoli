@@ -1,0 +1,91 @@
+ALIGN 4
+
+section .data
+message:
+  db "Recieved interrupt", 0x00
+
+
+
+section .text
+extern null_isr_handler
+extern term_print
+extern null_isr_handler_no_error
+%macro NULL_ISR_NOERROR 1
+global %1
+%1:
+  ; pushad
+  ; cld
+  ; push message
+  ; call term_print
+  ; popad
+  ; iret
+  cli
+  push byte 0
+  push byte 0
+  jmp isr_common_stub
+%endmacro
+
+%macro NULL_ISR_ERROR 1
+global %1
+%1:
+  ; pushad
+  ; cld
+  ; push message
+  ; call term_print
+  ; popad
+  ; iret
+  cli
+  push byte 0
+  jmp isr_common_stub
+%endmacro
+
+%macro ISR_HANDLER_NOERROR 1
+global %1
+%1:
+  call [%1]_c
+  iret
+%endmacro
+isr_common_stub:
+   pusha                 ; Pushes edi,esi,ebp,esp,ebx,edx,ecx,eax
+
+   mov ax, ds               ; Lower 16-bits of eax = ds.
+   push eax                 ; save the data segment descriptor
+
+   mov ax, 0x10  ; load the kernel data segment descriptor
+   mov ds, ax
+   mov es, ax
+   mov fs, ax
+   mov gs, ax
+
+   call null_isr_handler_no_error
+
+   pop eax        ; reload the original data segment descriptor
+   mov ds, ax
+   mov es, ax
+   mov fs, ax
+   mov gs, ax
+
+   popa           ; Pops edi,esi,ebp...
+   add esp, 8     ; Cleans up the pushed error code and pushed ISR number
+   sti
+   iret           ; pops 5 things at once: CS, EIP, EFLAGS, SS, and ESP
+NULL_ISR_NOERROR divide_error_handler
+NULL_ISR_NOERROR debug_exception_handler
+NULL_ISR_NOERROR nmi_handler
+NULL_ISR_NOERROR breakpoint_handler
+NULL_ISR_NOERROR overflow_handler
+NULL_ISR_NOERROR bound_exceeded_handler
+NULL_ISR_NOERROR undefined_opcode_handler
+NULL_ISR_NOERROR device_NA_handler
+NULL_ISR_ERROR double_fault_handler
+NULL_ISR_NOERROR coprocessor_segment_overrun_handler
+NULL_ISR_ERROR invalid_tss_handler
+NULL_ISR_ERROR segment_NA_handler
+NULL_ISR_ERROR stack_segment_fault_handler
+NULL_ISR_ERROR general_protection_fault_handler
+NULL_ISR_ERROR page_fault_handler
+NULL_ISR_NOERROR math_fault_handler
+NULL_ISR_NOERROR machine_check_abort_handler
+NULL_ISR_ERROR alignment_check_handler
+NULL_ISR_NOERROR simd_exception_handler
+NULL_ISR_NOERROR reserved_handler
