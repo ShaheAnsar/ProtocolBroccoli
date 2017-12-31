@@ -1,0 +1,230 @@
+
+memory/paging/paging.h,32
+#define PAGING_HPAGING_H8,175
+
+drivers/pit/pit_s.s,418
+global write_counter_%1global9,144
+global write_counter_byte_%1global26,406
+global write_control_wordglobal39,608
+write_control_word:write_control_word41,676
+WRITE_COUNTER 0WRITE_COUNTER49,788
+WRITE_COUNTER 1WRITE_COUNTER50,804
+WRITE_COUNTER 2WRITE_COUNTER51,820
+WRITE_COUNTER_BYTE 0WRITE_COUNTER_BYTE52,836
+WRITE_COUNTER_BYTE 1WRITE_COUNTER_BYTE53,857
+WRITE_COUNTER_BYTE 2WRITE_COUNTER_BYTE54,878
+
+drivers/pit/pit.c,286
+void write_counter(uint8_t timer, uint16_t count){write_counter18,503
+void write_counter_byte(uint8_t timer, uint8_t count){write_counter_byte31,754
+void init_pit_timer(uint8_t timer, uint8_t timer_mode, uint8_t read_write_mode, uint8_t bcd, uint16_t count){init_pit_timer44,1024
+
+drivers/pit/pit.h,883
+#define PIT_HPIT_H2,14
+#define COUNTER_0 COUNTER_03,28
+#define COUNTER_1 COUNTER_14,51
+#define COUNTER_2 COUNTER_25,73
+#define RD_BACK_COMMAND RD_BACK_COMMAND6,95
+#define COUNTER_OFFSET COUNTER_OFFSET7,123
+#define COUNTER_LATCH_COMMAND COUNTER_LATCH_COMMAND9,149
+#define READ_WRITE_LSB READ_WRITE_LSB10,183
+#define READ_WRITE_MSB READ_WRITE_MSB11,210
+#define READ_WRITE_WORD READ_WRITE_WORD12,237
+#define READ_WRITE_OFFSET READ_WRITE_OFFSET13,265
+#define MODE_AUTO_ONE_SHOT MODE_AUTO_ONE_SHOT15,294
+#define MODE_HARDWARE_ONE_SHOT MODE_HARDWARE_ONE_SHOT16,323
+#define MODE_RATE_GEN MODE_RATE_GEN17,356
+#define MODE_SQAURE_WAVE MODE_SQAURE_WAVE18,380
+#define MODE_SOFT_TRIGGER_STROBE MODE_SOFT_TRIGGER_STROBE19,407
+#define MODE_HARD_TRIGGER_STROBE MODE_HARD_TRIGGER_STROBE20,442
+#define MODE_OFFSET MODE_OFFSET21,477
+#define SET_BCD SET_BCD23,500
+
+start.S,157
+stack_bottom:stack_bottom34,1530
+stack_top:stack_top37,1717
+start:				#;The entry point of the code. This is where the OS starts executingstart44,1791
+
+vga/vga.c,614
+volatile uint16_t* VGA_MEM = (uint16_t*)0xB8000;VGA_MEM11,424
+unsigned int vga_cols = 0, vga_rows = 0;vga_cols12,474
+unsigned int vga_cols = 0, vga_rows = 0;vga_rows12,474
+static unsigned int current_row = 0;current_row14,518
+static unsigned int current_column = 0;current_column15,556
+uint8_t color = 0xF0;color17,652
+uint16_t make_video_word(uint8_t color, char character){make_video_word23,918
+uint8_t make_color(uint8_t color_fg, uint8_t color_bg){make_color38,1397
+void term_init(){term_init49,1683
+void term_putc(char c){term_putc67,2275
+void term_print(char* string){term_print99,3441
+
+vga/vga.h,932
+#define VGA_HVGA_H2,15
+#define VGA_COLOR_BLACK VGA_COLOR_BLACK13,372
+#define VGA_COLOR_BLUE VGA_COLOR_BLUE14,400
+#define VGA_COLOR_GREEN VGA_COLOR_GREEN15,427
+#define VGA_COLOR_CYAN VGA_COLOR_CYAN16,455
+#define VGA_COLOR_RED VGA_COLOR_RED17,482
+#define VGA_COLOR_MAGENTA VGA_COLOR_MAGENTA18,508
+#define VGA_COLOR_BROWN VGA_COLOR_BROWN19,538
+#define VGA_COLOR_LIGHT_GREY VGA_COLOR_LIGHT_GREY20,566
+#define VGA_COLOR_DARK_GREY VGA_COLOR_DARK_GREY21,599
+#define VGA_COLOR_LIGHT_BLUE VGA_COLOR_LIGHT_BLUE22,631
+#define VGA_COLOR_LIGHT_GREEN VGA_COLOR_LIGHT_GREEN23,664
+#define VGA_COLOR_LIGHT_CYAN VGA_COLOR_LIGHT_CYAN24,699
+#define VGA_COLOR_LIGHT_RED VGA_COLOR_LIGHT_RED25,733
+#define VGA_COLOR_LIGHT_MAGENTA VGA_COLOR_LIGHT_MAGENTA26,766
+#define VGA_COLOR_LIGHT_BROWN VGA_COLOR_LIGHT_BROWN27,803
+#define VGA_COLOR_WHITE VGA_COLOR_WHITE28,838
+#define WARN(WARN30,902
+#define INFORM(INFORM34,1060
+
+common/common.h,87
+#define COMMON_HCOMMON_H2,18
+  #define debug(debug13,400
+#define NULL NULL15,442
+
+descriptors/lidt.s,66
+global lidtglobal1,0
+section .textsection2,12
+lidt:lidt3,26
+
+descriptors/lgdt.s,43
+lgdt:lgdt7,109
+jump_gdt:jump_gdt29,577
+
+descriptors/interrupts.s,617
+section .datasection3,9
+message:message4,23
+message_irq:message_irq6,69
+section .textsection10,115
+extern null_isr_handlerextern11,129
+extern term_printextern12,153
+extern null_isr_handler_no_errorextern13,171
+extern send_eoiextern14,204
+global %1global16,246
+global %1global28,364
+extern %1_cextern41,499
+global %1global42,511
+section .datasection49,579
+section .textsection52,630
+global %1global53,644
+global spurious_interrupt_handlerglobal104,2115
+spurious_interrupt_handler:spurious_interrupt_handler105,2149
+global pit_handlerglobal108,2184
+pit_handler:pit_handler109,2203
+
+descriptors/gdt.c,971
+#define KERNEL_LEVEL KERNEL_LEVEL38,2039
+#define USER_LEVEL USER_LEVEL39,2066
+struct G_descriptor_t{G_descriptor_t44,2350
+  uint16_t seg_lim_low;//The lower 16 bits of the segment limitseg_lim_low45,2374
+  uint16_t base_low;//The lower 16 bits of the base addressbase_low46,2439
+  uint8_t base_mid;//Bits 16:23 of the base addressbase_mid47,2500
+  uint8_t flags;//Refer to the block diagramflags48,2553
+  uint8_t gran;gran53,2793
+  uint8_t base_high;//The highest 8 bits of the base addressbase_high54,2810
+typedef struct G_descriptor_t G_descriptor;G_descriptor56,2899
+struct gdt_ptr_t{gdt_ptr_t57,2944
+  uint16_t limit;limit58,2963
+  uint32_t base;base59,2982
+typedef struct gdt_ptr_t gdt_ptr;gdt_ptr61,3025
+G_descriptor G_descriptors[4];G_descriptors64,3263
+gdt_ptr gdt_pointer;gdt_pointer65,3295
+uint8_t make_flags(uint8_t present, uint8_t privilege, uint8_t DType, uint8_t SType){make_flags67,3319
+void init_gdt(){init_gdt73,3485
+
+descriptors/idt.c,1195
+typedef struct I_descriptor_T{I_descriptor_T96,3167
+  uint16_t address_low;//The lower word of the address to the entry point of the interruptaddress_low97,3198
+  uint16_t selector;//Points to a valid selector in the GDTselector98,3289
+  uint8_t zero;//Must always be zerozero99,3349
+  uint8_t type_attrib;//See abovetype_attrib100,3386
+  uint16_t address_high;//Higher word of the address to the entry point of tyhe ISRaddress_high101,3420
+}__attribute__((packed)) I_descriptor;I_descriptor102,3504
+typedef struct idt_ptr_T{idt_ptr_T104,3544
+   uint16_t limit;//Limit of the IDTlimit105,3570
+  uint32_t base_address;//Base address of the IDTbase_address106,3607
+}__attribute__((packed)) idt_ptr;idt_ptr107,3657
+I_descriptor idt_entries[256];idt_entries109,3692
+idt_ptr idt_pointer;idt_pointer110,3723
+static uint8_t make_flags(uint8_t present, uint8_t dpl, uint8_t isInterrupt, uint8_t size){make_flags112,3745
+I_descriptor make_interrupt_gate(uint32_t interrupt_handler, uint16_t segment, uint8_t type_attrib){make_interrupt_gate116,3934
+I_descriptor make_null_gate(){make_null_gate120,4160
+void init_idt(){init_idt125,4272
+void test_idt(){test_idt187,9378
+
+descriptors/descriptors.h,41
+#define DESCRIPTORS_HDESCRIPTORS_H2,23
+
+descriptors/pic/pic.c,0
+
+descriptors/pic/pic_s.s,406
+section .bsssection3,84
+mMask:mMask4,97
+sMask:sMask6,112
+section .textsection9,128
+global pic_initglobal41,1910
+pic_init:pic_init42,1926
+global pic_disableglobal87,2753
+pic_disable:			;You don't really disable the PIC, but rather mask all the interruptspic_disable88,2772
+global set_maskglobal95,2924
+set_mask:set_mask98,3013
+global send_eoiglobal113,3208
+send_eoi:send_eoi115,3249
+
+descriptors/pic/pic.h,25
+#define PIC_HPIC_H2,14
+
+descriptors/interrupts.c,132
+void null_isr_handler(uint8_t error_code){null_isr_handler6,78
+void null_isr_handler_no_error(){null_isr_handler_no_error10,169
+
+kernel.c,74
+int kernel_main(struct multiboot * multiboot_pointer){kernel_main10,172
+
+libc/string/strcoll.c,60
+int strcoll(const char* s1, const char *s2){strcoll10,267
+
+libc/string/strcat.c,125
+char* strcat(char* dest, const char* src){strcat9,138
+char* strncat(char* dest, const char* src, size_t n){strncat19,398
+
+libc/string/stpcpy.c,55
+char* stpcpy(char* dest,const char* src){stpcpy8,123
+
+libc/string/strings.h,33
+#define STRINGS_HSTRINGS_H2,18
+
+libc/string/strlen.c,48
+size_t strlen(const char* string){strlen9,116
+
+libc/string/string.h,31
+#define STRING_HSTRING_H2,18
+
+libc/string/strchr.c,157
+char* strchr(const char* s, int c){strchr8,147
+char* strrchr(const char* s, int c){strrchr18,329
+char* strchrnul(const char* s, int c){strchrnul31,538
+
+libc/string/strcmp.c,127
+int strcmp(const char* s1, const char* s2){strcmp9,138
+int strncmp(const char* s1, const char* s2, size_t n){strncmp23,438
+
+libc/string/strcpy.c,125
+char* strcpy(char* dest, const char* src){strcpy9,138
+char* strncpy(char* dest, const char* src, size_t n){strncpy17,309
+
+libc/string/index.c,97
+char* index(const char* s, int c){index9,156
+char* rindex(const char* s, int c){rindex19,333
+
+libc/string/memcpy.c,79
+void* memcpy(void* destination, void* source, unsigned int size){memcpy8,106
+
+libc/string/memset.c,71
+void* memset(void* destination, int c, unsigned int size){memset6,81
+
+libc/string/strcasecmp.c,144
+int strcasecmp(const char* s1, const char* s2){strcasecmp9,147
+int strncasecmp(const char* s1, const char* s2, size_t n){strncasecmp69,1391

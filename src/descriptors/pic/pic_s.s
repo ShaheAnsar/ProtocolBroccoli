@@ -32,7 +32,7 @@ section .text
 %define ICW1 ((1 << 4) | (1 << ICW4_NEEDED)) ;The (1 << 4) and the last bit of the address bus being 0 denote the conditions for an initalization command
 %define ICW4 (1 << MODE_x86)
 ;;;Master ICWs
-%define mICW2 (32 | 0x8)			;Since the first 32 vectors are reserved by CPU special ISRs, we want to shift this to the next divisible by 8 address, or 32
+%define mICW2 (32)			;Since the first 32 vectors are reserved by CPU special ISRs, we want to shift this to the next divisible by 8 address, or 32
 %define mICW3 (HAS_SLAVE(2))
 ;;;Slave ICWs
 %define sICW2 ((0x05 << OFFSET) | 0x08)			;This needs to start from vector 40
@@ -128,3 +128,13 @@ send_eoi:
 	pop ebp
 	ret
 	
+
+
+
+
+
+
+
+
+
+

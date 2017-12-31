@@ -48,7 +48,7 @@ global %1
 %macro NULL_IRQ_HANDLER 2
 section .data
 message_%1:
-	db '0' + %2, '\n', 0x00
+	db "IRQ", '0' + %2,'\n', 0
 section .text
 global %1
 %1:

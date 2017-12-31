@@ -22,7 +22,13 @@ int kernel_main(struct multiboot * multiboot_pointer){
 	test_idt();
 	INFORM("IDT Tested!! Seems to be functioning fine!!\n");
 	WARN("INITIALIZING PIT TIMER!!!\n");
-	init_pit_timer(COUNTER_0, MODE_HARDWARE_ONE_SHOT, READ_WRITE_WORD, 0, 0);
+	init_pit_timer(COUNTER_0, MODE_SQUARE_WAVE, READ_WRITE_WORD, 0, 0);
+	WARN("INITIALIZED PIT TIMER!!!\n");
+	WARN("SHOULD RECEIVE MULTIPLE INTERRUPTS\n");
+	init_pit_timer(COUNTER_0, MODE_HARDWARE_ONE_SHOT, READ_WRITE_WORD, 0, 65535);
+	//Note: The PIT TIMER seems to work fine
+	INFORM("PIT TESTING FINISHED\n");
+	
 	//Kernel loop
 	while(1);//Yes, the whole kernel IS a giant complex while loop. (sorta)
 	while(1);//Hang loop

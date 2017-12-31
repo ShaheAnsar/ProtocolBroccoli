@@ -9,6 +9,7 @@ OUTPUT=kernel.bin
 LINK_COMMAND=-T./src/linker.ld -o $(OUTPUT)
 ISODIR=grub
 OUTCOPYDIR=$(ISODIR)/boot/
+BOCHS=$(HOME)/.installed/bin/bochs
 
 
 
@@ -140,9 +141,19 @@ OUTCOPYDIR=$(ISODIR)/boot/
 all: $(OBJ)
 	$(CC) $(OBJ) $(FLAGS) $(LINK_COMMAND)
 
+TAGS: $(SRC) Makefile
+	cd src;\
+	ctags -e -R;\
+	cd ..
+
 geniso:	all
 	cp $(OUTPUT) $(ISODIR)/boot/$(OUTPUT)
 	grub-mkrescue -o $(OUTPUT:.bin=.iso) $(ISODIR)
+runbochs:
+	$(BOCHS) -f bochsrc -q
 
 clean:
 	-rm obj/* -rf
+
+
+

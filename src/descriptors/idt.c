@@ -160,7 +160,7 @@ void init_idt(){
   idt_entries[i++] = make_interrupt_gate((uint32_t)reserved_handler, 0x08, make_flags(1, 0, 1, 1));
   idt_entries[i++] = make_interrupt_gate((uint32_t)reserved_handler, 0x08, make_flags(1, 0, 1, 1));
   idt_entries[i++] = make_interrupt_gate((uint32_t)reserved_handler, 0x08, make_flags(1, 0, 1, 1));
-  i += 9;
+  //IRQs
   idt_entries[i++] = make_interrupt_gate((uint32_t)pit_handler, 0x08, make_flags(1, 0, 1, 1));
   idt_entries[i++] = make_interrupt_gate((uint32_t)keyboard_handler, 0x08, make_flags(1, 0, 1, 1));
   idt_entries[i++] = make_interrupt_gate((uint32_t)cascade_handler, 0x08, make_flags(1, 0, 1, 1));
