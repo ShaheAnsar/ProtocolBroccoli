@@ -2,9 +2,13 @@ SRC=./src/drivers/pit/pit.c ./src/drivers/pit/pit_s.s ./src/descriptors/pic/pic_
 OBJ=./obj/drivers/pit/pit.o ./obj/drivers/pit/pit_s.o ./obj/descriptors/pic/pic_s.o ./obj/libc/string/strcat.o ./obj/libc/string/strcmp.o ./obj/libc/string/memset.o ./obj/libc/string/strcoll.o ./obj/libc/string/strchr.o ./obj/libc/string/strcpy.o ./obj/libc/string/index.o ./obj/libc/string/stpcpy.o ./obj/libc/string/memcpy.o ./obj/libc/string/strlen.o ./obj/libc/string/strcasecmp.o ./obj/descriptors/interrupts.o ./obj/descriptors/idt.o ./obj/descriptors/gdt.o ./obj/vga/vga.o ./obj/kernel.o ./obj/descriptors/lgdt.o ./obj/descriptors/interrupts_s.o ./obj/descriptors/lidt.o ./obj/start.o
 FLAGS=-pedantic --std=gnu99 -O0 -ffreestanding -fbuiltin -Wall -Wextra -nostdlib -lgcc -g3
 INCLUDE=-I./src/drivers/pit/ -I./src/descriptors/pic/ -I./src/ -I./src/descriptors/ -I./src/libc/string/ -I./src/libc/string/ -I./src/libc/string/ -I./src/libc/string/ -I./src/libc/string/ -I./src/libc/string/ -I./src/libc/string/ -I./src/libc/string/ -I./src/libc/string/ -I./src/libc/string/ -I./src/vga/ -I./src/common/ -I./src/descriptors/ -I./src/libc/string/ -I./src/vga/ -I./src/descriptors/
+
 CC=i686-elf-gcc
 COMPILE_COMMAND=-c $< -o $@
-LINK_COMMAND=-T./src/linker.ld -o test.mk.out
+OUTPUT=kernel.bin
+LINK_COMMAND=-T./src/linker.ld -o $(OUTPUT)
+ISODIR=grub
+OUTCOPYDIR=$(ISODIR)/boot/
 
 
 
@@ -136,7 +140,9 @@ LINK_COMMAND=-T./src/linker.ld -o test.mk.out
 all: $(OBJ)
 	$(CC) $(OBJ) $(FLAGS) $(LINK_COMMAND)
 
-
+geniso:	all
+	cp $(OUTPUT) $(ISODIR)/boot/$(OUTPUT)
+	grub-mkrescue -o $(OUTPUT:.bin=.iso) $(ISODIR)
 
 clean:
 	-rm obj/* -rf
