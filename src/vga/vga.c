@@ -74,6 +74,9 @@ void term_putc(char c){
   case '\t':
     current_column += 4;//Incase of a tab, the column index is incremented by 4, leaving 4 blank spaces
     break;
+  case '\r':
+    current_column = 0;
+    break;
   default:
     VGA_MEM[current_row*vga_cols + current_column] = make_video_word(color, c); //In case of any other character, just print it.
     current_column++;//Also increase the column index by one, so the next character gets printed in the next column.

@@ -1,0 +1,10 @@
+#include "keyboard.h"
+
+//TODO: Get a proper keyboard driver working
+//NOTE: This is a palceholder driver to be used only in early
+//Deveopment stages
+extern void kbd_get_code();
+
+char kbd_get_char(){
+  
+}

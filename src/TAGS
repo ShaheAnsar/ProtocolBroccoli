@@ -34,11 +34,17 @@ drivers/pit/pit.h,883
 #define MODE_AUTO_ONE_SHOT MODE_AUTO_ONE_SHOT15,294
 #define MODE_HARDWARE_ONE_SHOT MODE_HARDWARE_ONE_SHOT16,323
 #define MODE_RATE_GEN MODE_RATE_GEN17,356
-#define MODE_SQAURE_WAVE MODE_SQAURE_WAVE18,380
+#define MODE_SQUARE_WAVE MODE_SQUARE_WAVE18,380
 #define MODE_SOFT_TRIGGER_STROBE MODE_SOFT_TRIGGER_STROBE19,407
 #define MODE_HARD_TRIGGER_STROBE MODE_HARD_TRIGGER_STROBE20,442
 #define MODE_OFFSET MODE_OFFSET21,477
 #define SET_BCD SET_BCD23,500
+
+drivers/keyboard/keyboard.h,35
+#define KEYBOARD_HKEYBOARD_H2,19
+
+drivers/keyboard/keyboard.c,47
+void keyboard_handler(){keyboard_handler3,23
 
 start.S,157
 stack_bottom:stack_bottom34,1530
@@ -107,12 +113,12 @@ global %1global28,364
 extern %1_cextern41,499
 global %1global42,511
 section .datasection49,579
-section .textsection52,630
-global %1global53,644
-global spurious_interrupt_handlerglobal104,2115
-spurious_interrupt_handler:spurious_interrupt_handler105,2149
-global pit_handlerglobal108,2184
-pit_handler:pit_handler109,2203
+section .textsection52,633
+global %1global53,647
+global spurious_interrupt_handlerglobal104,2119
+spurious_interrupt_handler:spurious_interrupt_handler105,2153
+global pit_handlerglobal108,2188
+pit_handler:pit_handler109,2207
 
 descriptors/gdt.c,971
 #define KERNEL_LEVEL KERNEL_LEVEL38,2039
@@ -152,7 +158,7 @@ static uint8_t make_flags(uint8_t present, uint8_t dpl, uint8_t isInterrupt, uin
 I_descriptor make_interrupt_gate(uint32_t interrupt_handler, uint16_t segment, uint8_t type_attrib){make_interrupt_gate116,3934
 I_descriptor make_null_gate(){make_null_gate120,4160
 void init_idt(){init_idt125,4272
-void test_idt(){test_idt187,9378
+void test_idt(){test_idt187,9377
 
 descriptors/descriptors.h,41
 #define DESCRIPTORS_HDESCRIPTORS_H2,23
@@ -164,14 +170,14 @@ section .bsssection3,84
 mMask:mMask4,97
 sMask:sMask6,112
 section .textsection9,128
-global pic_initglobal41,1910
-pic_init:pic_init42,1926
-global pic_disableglobal87,2753
-pic_disable:			;You don't really disable the PIC, but rather mask all the interruptspic_disable88,2772
-global set_maskglobal95,2924
-set_mask:set_mask98,3013
-global send_eoiglobal113,3208
-send_eoi:send_eoi115,3249
+global pic_initglobal41,1904
+pic_init:pic_init42,1920
+global pic_disableglobal87,2747
+pic_disable:			;You don't really disable the PIC, but rather mask all the interruptspic_disable88,2766
+global set_maskglobal95,2918
+set_mask:set_mask98,3007
+global send_eoiglobal113,3202
+send_eoi:send_eoi115,3243
 
 descriptors/pic/pic.h,25
 #define PIC_HPIC_H2,14

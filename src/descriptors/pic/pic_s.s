@@ -35,7 +35,7 @@ section .text
 %define mICW2 (32)			;Since the first 32 vectors are reserved by CPU special ISRs, we want to shift this to the next divisible by 8 address, or 32
 %define mICW3 (HAS_SLAVE(2))
 ;;;Slave ICWs
-%define sICW2 ((0x05 << OFFSET) | 0x08)			;This needs to start from vector 40
+%define sICW2 (40)			;This needs to start from vector 40
 %define sICW3 (ID(2))
 
 global pic_init

@@ -118,7 +118,7 @@ I_descriptor make_interrupt_gate(uint32_t interrupt_handler, uint16_t segment, u
 }
 
 I_descriptor make_null_gate(){
-  //TODO Make a null interrupt handler
+  //TODO Make a null interrupt 
   return make_interrupt_gate(0, 0, 0);
 }
 

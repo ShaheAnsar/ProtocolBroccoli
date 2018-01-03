@@ -1,0 +1,7 @@
+#ifndef KEYBOARD_H
+#define KEYBOARD_H
+
+//IRQ handler. Defined in keyboard.c. Called by an asm handler in descriptors/interrupts.s
+extern void keyboard_handler();
+
+#endif

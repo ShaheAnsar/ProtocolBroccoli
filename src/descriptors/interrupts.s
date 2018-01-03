@@ -6,6 +6,7 @@ message:
 message_irq:
 	db "Recieved IRQ", 0x0A, 0x00
 
+extern term_putc
 
 section .text
 extern null_isr_handler
@@ -85,7 +86,7 @@ global %1
 	NULL_ISR_NOERROR reserved_handler
 	;;;IRQs for the PIC
 	; NULL_IRQ_HANDLER pit_handler, 0
-	NULL_IRQ_HANDLER keyboard_handler, 1 
+	;; NULL_IRQ_HANDLER keyboard_handler, 1 
 	NULL_IRQ_HANDLER cascade_handler, 2
 	NULL_IRQ_HANDLER COM2_handler, 3
 	NULL_IRQ_HANDLER COM1_handler, 4
@@ -117,3 +118,15 @@ pit_handler:
 	add esp, 4
 	popad
 	iret
+
+
+;;; NOTE: This handler is only to be used during the early stages
+;;; of development when a proper scheduler isn't available
+;;; TODO: Replace keyboard_handler_primitive with a proper handler
+global keyboard_handler
+keyboard_handler:
+	push 0x1
+	call send_eoi
+	add esp, 4
+	iret
+

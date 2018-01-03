@@ -1,0 +1,8 @@
+section .text
+%define KBD_PORT
+global kbd_get_code
+;;; Get the current scan code
+kbd_get_code:
+	mov eax, 0
+	in BYTE al, KBD_PORT
+	ret

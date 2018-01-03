@@ -3,7 +3,7 @@
 #include <vga.h>
 #include <descriptors.h>
 #include <pit.h>
-
+#include <keyboard.h>
 
 
 
@@ -28,8 +28,29 @@ int kernel_main(struct multiboot * multiboot_pointer){
 	init_pit_timer(COUNTER_0, MODE_HARDWARE_ONE_SHOT, READ_WRITE_WORD, 0, 65535);
 	//Note: The PIT TIMER seems to work fine
 	INFORM("PIT TESTING FINISHED\n");
-	
+	WARN("TESTING KEYBOARD, GO AHEAD, TYPE->\n");
 	//Kernel loop
-	while(1);//Yes, the whole kernel IS a giant complex while loop. (sorta)
+	while(1){
+	  char pressed[] = "Pressed\r";
+	  char released[] = "Released \r";
+	  char key = kbd_get_char();
+	  if((key == '\n') && (kbd_flags.pressed == 0)){
+	    continue;
+	  }
+	  if(key == '\n'){
+	    for(volatile long int i = 0; i < 0xFFFFFF; i++){
+	    }
+	  }
+	  key = key?key:'U';
+	  char string[2] = {key, 0};
+	  INFORM(string);
+	  if(kbd_flags.pressed){	 
+	    INFORM(pressed);
+	  }
+	  else{
+	    INFORM(released);
+	  }
+	    
+	}//Yes, the whole kernel IS a giant complex while loop. (sorta)
 	while(1);//Hang loop
 }
