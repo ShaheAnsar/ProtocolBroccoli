@@ -11,6 +11,7 @@ FLAGS=-pedantic --std=gnu99 -O0 -ffreestanding -fbuiltin -Wall -Wextra -nostdlib
 INCLUDE=-I./src/drivers/keyboard -I./src/drivers/pit/ -I./src/descriptors/pic/ -I./src/ -I./src/descriptors/ -I./src/libc/string/ -I./src/libc/string/ -I./src/libc/string/ -I./src/libc/string/ -I./src/libc/string/ -I./src/libc/string/ -I./src/libc/string/ -I./src/libc/string/ -I./src/libc/string/ -I./src/libc/string/ -I./src/vga/ -I./src/common/ -I./src/descriptors/ -I./src/libc/string/ -I./src/vga/ -I./src/descriptors/
 
 CC=i686-elf-gcc
+AS=nasm
 COMPILE_COMMAND=-c $< -o $@
 OUTPUT=kernel.bin
 LINK_COMMAND=-T./src/linker.ld -o $(OUTPUT)
@@ -25,7 +26,7 @@ obj/%_S.o: %.S
 
 obj/%_s.o: %.s
 	-mkdir -p $(dir $@)
-	nasm -felf32 $< -o $@
+	$(AS) -felf32 $< -o $@
 
 obj/%.o: %.c
 	-mkdir -p $(dir $@)

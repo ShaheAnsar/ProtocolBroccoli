@@ -5,6 +5,79 @@ message:
 	db "Recieved interrupt", 0x0A, 0x00
 message_irq:
 	db "Recieved IRQ", 0x0A, 0x00
+pit_handler_msg:
+	db "PIT IRQ", 0x0D, 0x0A, 0x00
+divide_error_handler_msg:
+	db "divide_error_handler", 0x0A, 0x00
+debug_exception_handler_msg:
+	db "debug_exception_handler", 0x0A, 0x00
+nmi_handler_msg:
+	db "nmi_handler", 0x0A, 0x00
+breakpoint_handler_msg:
+	db "breakpoint_handler", 0x0A, 0x00
+overflow_handler_msg:
+	db "overflow_handler", 0x0A, 0x00
+bound_exceeded_handler_msg:
+	db "bound_exceeded_handler", 0x0A, 0x00
+undefined_opcode_handler_msg:
+	db "undefined_opcode_handler", 0x0A, 0x00
+device_NA_handler_msg:
+	db "device_NA_handler", 0x0A, 0x00
+double_fault_handler_msg:
+	db "double_fault_handler", 0x0A, 0x00
+coprocessor_segment_overrun_handler_msg:
+	db "coprocessor_segment_overrun_handler", 0x0A, 0x00
+invalid_tss_handler_msg:
+	db "invalid_tss_handler", 0x0A, 0x00
+segment_NA_handler_msg:
+	db "segment_NA_handler", 0x0A, 0x00
+stack_segment_fault_handler_msg:
+	db "stack_segment_fault_handler", 0x0A, 0x00
+general_protection_fault_handler_msg:
+	db "general_protection_fault_handler", 0x0A, 0x00
+page_fault_handler_msg:
+	db "page_fault_handler", 0x0A, 0x00
+math_fault_handler_msg:
+	db "math_fault_handler", 0x0A, 0x00
+machine_check_abort_handler_msg:
+	db "machine_check_abort_handler", 0x0A, 0x00
+alignment_check_handler_msg:
+	db "alignment_check_handler", 0x0A, 0x00
+simd_exception_handler_msg:
+	db "simd_exception_handler", 0x0A, 0x00
+reserved_handler_msg:
+	db "reserved_handler", 0x0A, 0x00
+cascade_handler_msg:
+	db "cascade_handler, 2", 0x0A, 0x00
+COM2_handler_msg:
+	db "COM2_handler, 3", 0x0A, 0x00
+COM1_handler_msg:
+	db "COM1_handler, 4", 0x0A, 0x00
+LPT2_handler_msg:
+	db "LPT2_handler, 5", 0x0A, 0x00
+floppy_handler_msg:
+	db "floppy_handler, 6", 0x0A, 0x00
+rtc_handler_msg:
+	db "rtc_handler, 8", 0x0A, 0x00
+periph1_handler_msg:
+	db "periph1_handler, 9", 0x0A, 0x00
+periph2_handler_msg:
+	db "periph2_handler, 10", 0x0A, 0x00
+periph3_handler_msg:
+	db "periph3_handler, 11", 0x0A, 0x00
+mouse_handler_msg:
+	db "mouse_handler, 12", 0x0A, 0x00
+fpu_handler_msg:
+	db "fpu_handler, 13", 0x0A, 0x00
+hdd1_handler_msg:
+	db "hdd1_handler, 14", 0x0A, 0x00
+hdd2_handler_msg:
+	db "hdd2_handler, 15", 0x0A, 0x00
+
+
+
+
+
 
 extern term_putc
 
@@ -15,10 +88,10 @@ extern null_isr_handler_no_error
 extern send_eoi
 %macro NULL_ISR_NOERROR 1
 global %1
-%1:
+	%1:
 	pushad
 	cld
-	push message
+	push %1_msg
 	call term_print
 	add esp, 4
 	popad
@@ -27,11 +100,11 @@ global %1
 
 %macro NULL_ISR_ERROR 1
 global %1
-%1:
+	%1:
 	add esp, 4
 	pushad
 	cld
-	push message
+	push %1_msg
 	call term_print
 	add esp, 4
 	popad
@@ -41,25 +114,27 @@ global %1
 %macro ISR_HANDLER_NOERROR 1
 extern %1_c
 global %1
-%1:
+	%1:
 	call %1_c
 	iret
 %endmacro
 
 %macro NULL_IRQ_HANDLER 2
 section .data
-message_%1:
+	message_%1:
 	db "IRQ", '0' + %2,'\n', 0
 section .text
 global %1
-%1:
+	%1:
 	pushad
 	cld
 	push message_%1
 	call term_print
 	push %2
 	call send_eoi
-	add esp, 8
+	push %1_msg
+	call term_print
+	add esp, 12
 	popad
 	iret
 %endmacro
@@ -84,9 +159,9 @@ global %1
 	NULL_ISR_ERROR alignment_check_handler
 	NULL_ISR_NOERROR simd_exception_handler
 	NULL_ISR_NOERROR reserved_handler
-	;;;IRQs for the PIC
+;;;IRQs for the PIC
 	; NULL_IRQ_HANDLER pit_handler, 0
-	;; NULL_IRQ_HANDLER keyboard_handler, 1 
+;; NULL_IRQ_HANDLER keyboard_handler, 1 
 	NULL_IRQ_HANDLER cascade_handler, 2
 	NULL_IRQ_HANDLER COM2_handler, 3
 	NULL_IRQ_HANDLER COM1_handler, 4
@@ -110,7 +185,7 @@ global pit_handler
 pit_handler:
 	pushad
 	cld
-	push message_irq
+	push pit_handler_msg
 	call term_print
 	add esp, 4
 	push 0x0
